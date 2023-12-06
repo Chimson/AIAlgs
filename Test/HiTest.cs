@@ -9,7 +9,7 @@ public class HiTest {
 
   [Test]
   public void Test1() {
-    Lib.Hello.Hi();
+    Hello.Hi();
     Assert.Pass();
   }
 }
