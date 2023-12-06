@@ -1,12 +1,12 @@
 namespace Test;
 
-using Lib;
+using Lib.Data;
 
 public class DecisionTreeTests {
 
   [Test]
   public void CheckTrainingData() {
-    
+    ReadArticleChoiceData r = new ReadArticleChoiceData();
   }
 
 }
