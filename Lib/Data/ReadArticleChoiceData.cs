@@ -26,6 +26,8 @@ public class UserData {
   private Thread Thread;
   private Length Length;
   private WhereRead WhereRead;
+
+  // target feature
   private UserAction UserAction;
   
   public UserData(Author auth, Thread thread, Length len, WhereRead wr, UserAction ua) {
@@ -43,7 +45,7 @@ public class UserData {
 
 
 public class ReadArticleChoiceData {
-  private static List<UserData> TrainingSet = new List<UserData>(); 
+  public List<UserData> TrainingSet = new List<UserData>(); 
   
   public ReadArticleChoiceData() {
     TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Long,  WhereRead.Home, UserAction.Skips));
