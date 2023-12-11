@@ -1,6 +1,7 @@
 namespace Test;
 
 using Lib.Data;
+using Lib;
 
 public class DecisionTreeTests {
 
@@ -15,6 +16,15 @@ public class DecisionTreeTests {
   public void CheckUserData2() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Console.WriteLine(data);
+    Assert.Pass();
+  }
+
+  [Test]
+  public void CheckFeature1() {
+    WhereRead fval = WhereRead.Home;
+    Feature f1 = new Feature(fval); 
+    Console.WriteLine(f1.GetFeature());  // Lib.Data.WhereRead
+    Console.WriteLine(f1.GetVal());     // Home
     Assert.Pass();
   }
 }

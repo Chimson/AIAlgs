@@ -22,13 +22,13 @@ public enum UserAction {
 
 public class UserData {
 
-  private Author Author;
-  private Thread Thread;
-  private Length Length;
-  private WhereRead WhereRead;
+  public Author Author;
+  public Thread Thread;
+  public Length Length;
+  public WhereRead WhereRead;
 
   // target feature
-  private UserAction UserAction;
+  public UserAction UserAction;
   
   public UserData(Author auth, Thread thread, Length len, WhereRead wr, UserAction ua) {
     this.Author = auth;
