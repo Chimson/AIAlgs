@@ -27,4 +27,13 @@ public class DecisionTreeTests {
     Console.WriteLine(f1.GetVal());     // Home
     Assert.Pass();
   }
+
+  [Test]
+  public void CheckSelectSplit1() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    
+    // I gave it dummy UserAction dummy val, that is unread from conds
+    UserData conds = new UserData(Author.Unknown, Thread.New, Length.Long, WhereRead.Work, );
+  }
 }
+
