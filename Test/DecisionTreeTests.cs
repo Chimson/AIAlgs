@@ -29,11 +29,19 @@ public class DecisionTreeTests {
   }
 
   [Test]
-  public void CheckSelectSplit1() {
+  public void CheckSumLoss1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     
     // I gave it dummy UserAction dummy val, that is unread from conds
-    UserData conds = new UserData(Author.Unknown, Thread.New, Length.Long, WhereRead.Work, );
+    UserData conds = new UserData(Author.Unknown, Thread.New, Length.Long, WhereRead.Work, UserAction.Skips);
+
+    double sum_loss = DecisionTreeLearner.sum_loss(data);
+    Console.WriteLine($"sum_loss = {sum_loss}");
+    Assert.Equals(sum_loss, 9.0);    // there are 9 Reads and 9 Skips for target feature User_Action
+
   }
+
 }
+
+// dotnet test -warnAsMessage:NUnit2005 Test --filter "DecisionTreeTests.CheckSelectSplit1"
 

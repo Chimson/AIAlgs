@@ -3,6 +3,10 @@
 
 namespace Lib;
 
+public enum None {
+  None
+}
+
 public class Feature {
 
   private Enum Val;
