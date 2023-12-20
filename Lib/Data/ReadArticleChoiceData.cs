@@ -41,6 +41,30 @@ public class UserData {
   public override string ToString() {
     return $"Author:{this.Author}, Thread:{this.Thread}, Length:{this.Length}, WhereRead:{this.WhereRead}";
   }
+
+  public string GetVal(Type feature) {
+   
+    if (feature.Equals(Author)) {
+      return $"{this.Author}";
+    }
+    else if (feature.Equals(Thread)) {
+      return $"{this.Thread}";
+    }
+    else if (feature.Equals(Length)) {
+      return $"{this.Length}";
+    }
+    else if (feature.Equals(WhereRead)) {
+      return $"{this.WhereRead}";
+    }
+    else if (feature.Equals(UserAction)) {
+      return $"{this.UserAction}";
+    }
+    else {
+      return "null";
+    }
+  
+  }
+
 }
 
 

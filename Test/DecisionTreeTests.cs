@@ -41,6 +41,16 @@ public class DecisionTreeTests {
 
   }
 
+  [Test]
+  public void CheckFindCondTrue1() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Feature cond = new Feature(WhereRead.Home);
+    List<UserData> trues = DecisionTreeLearner.find_cond_true(data, cond);
+    foreach (UserData ex in trues) {
+      Console.WriteLine($"{ex}");
+    }
+  }
+
 }
 
 // dotnet test -warnAsMessage:NUnit2005 Test --filter "DecisionTreeTests.CheckSelectSplit1"

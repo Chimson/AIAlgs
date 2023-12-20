@@ -56,17 +56,19 @@ public class DecisionTreeLearner {
     }
   }
 
-  // public static List<UserData> find_cond_true(ReadArticleChoiceData examples, Feature cond) {
-  //   List<UserData> trues = new List<UserData>();
-    
-  //   foreach (UserData ex in examples.TrainingSet) {
-  //     Feature ex_feature = new Feature(ex.UserAction);
-  //     if ( ex_feature.GetVal() == cond.GetVal() && ex_feature.GetFeature() == cond.GetFeature()) {
-  //       trues.Add(new UserData(ex.Author, ex.Thread, ex.Length, ex.WhereRead, ex.UserAction));
-  //     }      
-    
-  
-  // }
+  public static List<UserData> find_cond_true(ReadArticleChoiceData examples, Feature cond) {
+    List<UserData> trues = new List<UserData>();   
+
+    foreach (UserData ex in examples.TrainingSet) {
+      Type condtype = cond.GetFeature();
+      string exval = ex.GetVal(condtype);
+      if (exval == cond.GetVal()) {
+        trues.Add(ex);
+      }
+    }
+
+    return trues;
+  }
 
   public static Feature select_split(ReadArticleChoiceData examples, List<Feature> conds, 
     double min_improv) {
@@ -77,8 +79,8 @@ public class DecisionTreeLearner {
 
     foreach (Feature cond in conds) {
 
-      // List<UserData> cond_true_data = find_cond_true(examples, cond);
-
+      List<UserData> cond_true_data = find_cond_true(examples, cond);
+      // Finish with calling sum_loss
     }
 
     return new Feature(WhereRead.Home);  // REPLACE THIS
@@ -89,4 +91,5 @@ public class DecisionTreeLearner {
 }
 
 // TODO: need to abstract some of this code better
+// TODO: need some kind of way to get the feature value from the data better
 
