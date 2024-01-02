@@ -20,49 +20,45 @@ public enum UserAction {
   Skips, Reads
 }
 
+// used for null like features
+public enum None {
+  None
+}
+
 public class UserData {
 
-  public Author Author;
-  public Thread Thread;
-  public Length Length;
-  public WhereRead WhereRead;
-
-  // target feature
-  public UserAction UserAction;
+  public List<Feature> Features;
   
-  public UserData(Author auth, Thread thread, Length len, WhereRead wr, UserAction ua) {
-    this.Author = auth;
-    this.Thread = thread;
-    this.Length = len;
-    this.WhereRead = wr;
-    this.UserAction = ua;
+  public UserData() {
+    Features = new List<Feature>();
   }
 
   public override string ToString() {
-    return $"Author:{this.Author}, Thread:{this.Thread}, Length:{this.Length}, WhereRead:{this.WhereRead}";
+    String msg = "";
+    foreach (Feature feature in Features) {
+      msg += $"{feature.GetVal()}, ";
+    }
+    msg = msg.TrimEnd(' ');
+    msg = msg.TrimEnd(',');
+    return msg;
   }
 
-  public string GetVal(Type feature) {
-   
-    if (feature.Equals(Author)) {
-      return $"{this.Author}";
+  public UserData AddF(Feature feature) {
+    Features.Add(feature);
+    return this;
+  }
+
+  public List<Feature> GetFeatures() {
+    return Features;
+  } 
+
+  public Feature GetFeature(Feature feat) {
+    foreach (Feature f in Features) {
+      if (f.Equals(feat)) {
+        return f;
+      }
     }
-    else if (feature.Equals(Thread)) {
-      return $"{this.Thread}";
-    }
-    else if (feature.Equals(Length)) {
-      return $"{this.Length}";
-    }
-    else if (feature.Equals(WhereRead)) {
-      return $"{this.WhereRead}";
-    }
-    else if (feature.Equals(UserAction)) {
-      return $"{this.UserAction}";
-    }
-    else {
-      return "null";
-    }
-  
+    return new Feature(None.None);
   }
 
 }
@@ -72,24 +68,42 @@ public class ReadArticleChoiceData {
   public List<UserData> TrainingSet = new List<UserData>(); 
   
   public ReadArticleChoiceData() {
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Long,  WhereRead.Home, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Unknown, Thread.New,      Length.Short, WhereRead.Work, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Unknown, Thread.Followup, Length.Long,  WhereRead.Work, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.Followup, Length.Long,  WhereRead.Home, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Short, WhereRead.Home, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.Followup, Length.Long,  WhereRead.Work, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Unknown, Thread.Followup, Length.Short, WhereRead.Work, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Unknown, Thread.New,      Length.Short, WhereRead.Work, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.Followup, Length.Long,  WhereRead.Home, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Long,  WhereRead.Work, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Unknown, Thread.Followup, Length.Short, WhereRead.Home, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Long,  WhereRead.Work, UserAction.Skips));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.Followup, Length.Short, WhereRead.Home, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Short, WhereRead.Work, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Short, WhereRead.Home, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.Followup, Length.Short, WhereRead.Work, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Known,   Thread.New,      Length.Short, WhereRead.Home, UserAction.Reads));
-    TrainingSet.Add(new UserData(Author.Unknown, Thread.New,      Length.Short, WhereRead.Work, UserAction.Reads));
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Long))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Skips)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.Followup)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Reads)) );
+    TrainingSet.Add( (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Short))
+      .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Reads)) );
   }
 
   public override string ToString() {

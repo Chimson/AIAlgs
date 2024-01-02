@@ -25,4 +25,11 @@ public class Feature {
     return msg;
   }
 
+  public bool Equals(Feature other) {
+    return 
+      this.GetFeature() == other.GetFeature() &&
+      this.GetVal() == other.GetVal();
+  }
+
 }
+
