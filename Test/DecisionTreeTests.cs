@@ -6,52 +6,64 @@ using Lib;
 public class DecisionTreeTests {
 
   [Test]
-  public void CheckUserData1() {
-    UserData ex1 = (new UserData()).AddF(new Feature(Author.Known)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Long))
-      .AddF(new Feature(WhereRead.Home)).AddF(new Feature(UserAction.Skips));
-    Console.WriteLine($"CheckTrainingData: {ex1}");
+  public void CheckExampleData1() {
+    Example ex1 = new Example();
+    ex1.Add("Author", Author.Known).Add("Thread", Thread.Followup).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Home).Add("UserAction", UserAction.Reads);
+    Console.WriteLine(ex1);
     Assert.Pass();
   }
 
   [Test]
-  public void CheckUserData2() {
+  public void CheckExampleData2() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Console.WriteLine(data);
     Assert.Pass();
   }
 
+
   [Test]
-  public void CheckFeature1() {
-    WhereRead fval = WhereRead.Home;
-    Feature f1 = new Feature(fval); 
-    Console.WriteLine(f1.GetFeature());  // Lib.Data.WhereRead
-    Console.WriteLine(f1.GetVal());     // Home
+  public void CheckFindMode1() {
+    ReadArticleChoiceData init = new ReadArticleChoiceData();
+    List<Example> data = init.TrainingSet;
+    Console.WriteLine($"{DecisionTreeLearner.find_mode(data, "Author")}");
+    Console.WriteLine($"{DecisionTreeLearner.find_mode(data, "Thread")}");
+    Console.WriteLine($"{DecisionTreeLearner.find_mode(data, "Length")}");
+    Console.WriteLine($"{DecisionTreeLearner.find_mode(data, "WhereRead")}");
+    Console.WriteLine($"{DecisionTreeLearner.find_mode(data, "UserAction")}");
     Assert.Pass();
   }
 
-  // [Test]
-  // public void CheckSumLoss1() {
-  //   ReadArticleChoiceData data = new ReadArticleChoiceData();
-    
-  //   // I gave it dummy UserAction dummy val, that is unread from conds
-  //   UserData conds = (new UserData()).AddF(new Feature(Author.Unknown)).AddF(new Feature(Thread.New)).AddF(new Feature(Length.Long))
-  //     .AddF(new Feature(WhereRead.Work)).AddF(new Feature(UserAction.Skips));
-    
-  //   double sum_loss = DecisionTreeLearner.sum_loss(data);
-  //   Console.WriteLine($"sum_loss = {sum_loss}");
-  //   Assert.Equals(sum_loss, 9.0);    // there are 9 Reads and 9 Skips for target feature User_Action
 
-  // }
 
-  // [Test]
-  // public void CheckFindCondTrue1() {
-  //   ReadArticleChoiceData data = new ReadArticleChoiceData();
-  //   Feature cond = new Feature(WhereRead.Home);
-  //   List<UserData> trues = DecisionTreeLearner.find_cond_true(data, cond);
-  //   foreach (UserData ex in trues) {
-  //     Console.WriteLine($"{ex}");
-  //   }
-  // }
+  [Test]
+  public void CheckSumLoss1() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    
+    double sum_loss = DecisionTreeLearner.sum_loss(data.TrainingSet, "UserAction");
+    Console.WriteLine($"sum_loss = {sum_loss}");
+    Assert.AreEqual(sum_loss, 9.0);    // there are 9 Reads and 9 Skips for target feature User_Action
+
+  }
+
+  [Test]
+  public void CheckFindCondTrue1() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Enum cond = WhereRead.Home;
+    List<Example> trues = DecisionTreeLearner.find_cond_true(data, cond);
+    foreach (Example ex in trues) {
+      Console.WriteLine($"{ex}");
+    }
+  }
+
+  [Test]
+  public void CheckSelectSplit1() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Author", Author.Unknown).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Work);
+    DecisionTreeLearner.select_split(data, conds, 2.0, "UserAction");
+  }
 
 }
 

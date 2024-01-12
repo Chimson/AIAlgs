@@ -4,87 +4,92 @@ using Lib.Data;
 
 public class DecisionTreeLearner {
 
-  // public static Feature find_mode(ReadArticleChoiceData examples) {
+  public static Enum find_mode(List<Example> examples, string target_feature) {
     
-    // int[] freq = new int[2];
-    // foreach (UserData ex in examples.TrainingSet) {
-      
-      
-    //   if (ex.UserAction == UserAction.Skips) {
-    //     freq[0] += 1; 
-    //   } 
-    //   else {
-    //     freq[1] += 1;
-    //   }
-    // }
+    Dictionary<string, int> counts = new Dictionary<string, int>();
+ 
+    // take first examples target feature value, and retrieve's all feature's possible values
+    Enum testval = examples[0].Features[target_feature];
+    string[] tvals = Enum.GetNames(testval.GetType());
 
-    // if (freq[0] >= freq[1]) {
-    //   return new Feature(UserAction.Skips);
-    // }
-    // else {
-    //   return new Feature(UserAction.Reads);
-    // }
-  // }
+    // Initialize the dictionary for the counts
+    foreach (string s in tvals) {
+      counts[s] = 0;
+    }
 
-  // public static double sum_loss(ReadArticleChoiceData examples) {
+    foreach (Example ex in examples) {
+      Enum ex_target_val = ex.Features[target_feature];
+      counts[$"{ex_target_val}"] += 1;
+    }
 
-  //   // the optimal prediction for L0 Loss is the mode
-  //   Feature mode = find_mode(examples);
+    // find the target value that appears the most
+    int max = 0;
+    string tval = "";
+    foreach (KeyValuePair<string, int> kvp in counts) {
+      if (kvp.Value >= max) {
+        tval = $"{kvp.Key}";
+        max = kvp.Value;
+      }
+    } 
 
-  //   // extract the training set
-  //   List<UserData> training = examples.TrainingSet;
-  //   double sum = 0.0;
+    // convert the string into an enum, using one of the examples
+    Enum result = examples[0].ConvertToEnum(tval);
+    return result;
+  }
 
-  //   foreach (UserData ex in training) {
-  //     Feature actual = new Feature(ex.UserAction);
-  //     sum += loss(actual, mode);
-  //   }    
+  public static double sum_loss(List<Example> examples, string target_feature) {
 
-  //   return sum; 
-  // }
+    // the optimal prediction for L0 Loss is the mode
+    Enum mode = find_mode(examples, target_feature);
 
-  // public static double loss(Feature predicted, Feature actual) {
-  //   // choosing a very simple L0 Loss
+    double sum = 0.0;
 
+    foreach (Example ex in examples) {
+      Enum actual = ex.Features[target_feature];
+      sum += loss(mode, actual);
+    }    
+
+    return sum;  
+
+  }
+
+  public static double loss(Enum predicted, Enum actual) {
+    // choosing a very simple L0 Loss
+
+    if (predicted.Equals(actual)) { 
+      return 0;
+    }
+    else {
+      return 1;
+    }
+  }
+
+  public static List<Example> find_cond_true(ReadArticleChoiceData examples, Enum cond) {
+    List<Example> result = new List<Example>();
+    string target = Example.TrimTypeName(cond.GetType());
+    foreach (Example ex in examples.TrainingSet) {
+      if (ex.Features[target].Equals(cond)) {
+        result.Add(ex);
+      }
+    }
+    return result;  
+  }
+
+  public static Feature select_split(ReadArticleChoiceData examples, Example conds, 
+    double min_improv, string target_feature) {
     
-  //   bool bin =  predicted.GetVal() == actual.GetVal() && predicted.GetFeature() == actual.GetFeature();
-  //   if (bin == true) { 
-  //     return 0;
-  //   }
-  //   else {
-  //     return 1;
-  //   }
-  // }
+    double best_val = sum_loss(examples.TrainingSet, target_feature) - min_improv;
 
-  // public static List<UserData> find_cond_true(ReadArticleChoiceData examples, Feature cond) {
-  //   List<UserData> trues = new List<UserData>();   
 
-  //   foreach (UserData ex in examples.TrainingSet) {
-  //     Type condtype = cond.GetFeature();
-  //     string exval = ex.GetVal(condtype);
-  //     if (exval == cond.GetVal()) {
-  //       trues.Add(ex);
-  //     }
-  //   }
+    foreach (Enum cond in conds.Features.Values) {
 
-  //   return trues;
-  // }
+      List<Example> cond_true_data = find_cond_true(examples, cond);
+      double val = sum_loss(cond_true_data, target_feature);
+      Console.WriteLine(val);
+    }
 
-  // public static Feature select_split(ReadArticleChoiceData examples, List<Feature> conds, 
-  //   double min_improv) {
-    
-  //   double best_val = sum_loss(examples);
-
-  //   Feature none = new Feature(None.None);
-
-  //   foreach (Feature cond in conds) {
-
-  //     List<UserData> cond_true_data = find_cond_true(examples, cond);
-  //     // Finish with calling sum_loss
-  //   }
-
-  //   return new Feature(WhereRead.Home);  // REPLACE THIS
-  // }
+    return new Feature(WhereRead.Home);  // REPLACE THIS
+  }
 
 }
 
