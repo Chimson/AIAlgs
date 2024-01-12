@@ -64,32 +64,48 @@ public class DecisionTreeLearner {
     }
   }
 
-  public static List<Example> find_cond_true(ReadArticleChoiceData examples, Enum cond) {
-    List<Example> result = new List<Example>();
+  public static List<List<Example>> find_cond(ReadArticleChoiceData examples, Enum cond) {
+    List<Example> true_results = new List<Example>();
+    List<Example> false_results = new List<Example>();
     string target = Example.TrimTypeName(cond.GetType());
     foreach (Example ex in examples.TrainingSet) {
       if (ex.Features[target].Equals(cond)) {
-        result.Add(ex);
+        true_results.Add(ex);
       }
-    }
-    return result;  
+      else {
+        false_results.Add(ex);
+      }
+    } 
+    List<List<Example>> results = new List<List<Example>>();
+    results.Add(true_results);
+    results.Add(false_results);
+    return results;
   }
 
-  public static Feature select_split(ReadArticleChoiceData examples, Example conds, 
+  public static Enum select_split(ReadArticleChoiceData examples, Example conds, 
     double min_improv, string target_feature) {
     
     double best_val = sum_loss(examples.TrainingSet, target_feature) - min_improv;
 
+    Enum best_split = None.None;
 
     foreach (Enum cond in conds.Features.Values) {
 
-      List<Example> cond_true_data = find_cond_true(examples, cond);
-      double val = sum_loss(cond_true_data, target_feature);
-      Console.WriteLine(val);
+      // first list is when cond is true, second is when false
+      List<List<Example>> cond_data = find_cond(examples, cond);
+      
+      double val = sum_loss(cond_data[0], target_feature);
+      val += sum_loss(cond_data[1], target_feature);
+      if (val < best_val) {
+        best_val = val;
+        best_split = cond;
+      }
     }
-
-    return new Feature(WhereRead.Home);  // REPLACE THIS
+    
+    return best_split;
   }
 
 }
+
+
 

@@ -1,0 +1,6 @@
+TODO:
+
+Make Example its own class
+Make DecisionTreeLearnLearner() function
+  target_feature should be a parameter which
+    will be removed from the existing functions

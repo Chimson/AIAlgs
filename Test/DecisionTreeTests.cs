@@ -50,7 +50,8 @@ public class DecisionTreeTests {
   public void CheckFindCondTrue1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Enum cond = WhereRead.Home;
-    List<Example> trues = DecisionTreeLearner.find_cond_true(data, cond);
+    List<List<Example>> results = DecisionTreeLearner.find_cond(data, cond);
+    List<Example> trues = results[0];
     foreach (Example ex in trues) {
       Console.WriteLine($"{ex}");
     }
@@ -62,16 +63,10 @@ public class DecisionTreeTests {
     Example conds = new Example();
     conds.Add("Author", Author.Unknown).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Work);
-    DecisionTreeLearner.select_split(data, conds, 2.0, "UserAction");
+    Enum result = DecisionTreeLearner.select_split(data, conds, 1.0, "UserAction");
+    Console.WriteLine($"{Example.TrimTypeName(result.GetType())}: {result}");
   }
 
 }
 
 // dotnet test -warnAsMessage:NUnit2005 Test --filter "DecisionTreeTests.CheckSelectSplit1"
-
-/*
-TODO: get the tests to work, basically rewrite the DecisionTreeLearner
-      UserData is now a List<Feature>, and the changes in each method needs adjusted
-      UserData needs its own dedicated file, seperate from ReadArticleChoiceData
-      
-*/
