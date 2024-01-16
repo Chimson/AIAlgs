@@ -2,7 +2,7 @@ namespace Lib;
 
 using Lib.Data;
 
-public class DecisionTreeLearner {
+public class DecisionTree {
 
   public static Enum find_mode(List<Example> examples, string target_feature) {
     
@@ -104,6 +104,27 @@ public class DecisionTreeLearner {
     
     return best_split;
   }
+
+  public static void Learner(Example conds, string target_feature, ReadArticleChoiceData examples, 
+    double min_improv ) {
+
+      Enum cond = select_split(examples, conds, min_improv, target_feature);
+
+      if (cond is None.None) {
+        // complete this block
+      }
+      else {
+        List<List<Example>> true_and_false = find_cond(examples, cond);
+        List<Example> true_exs = true_and_false[0];
+        List<Example> false_exs = true_and_false[1];
+
+      }
+
+  }
+
+  /*
+  
+  */
 
 }
 
