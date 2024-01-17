@@ -4,8 +4,8 @@ Make Example its own class
 Make the DecisionTree class hold some data attributes, which will
   remove a lot of the function arguments in
 DecisionTree.Learner() need to return function T(e),
-  where e is an example in the training set, for all e in the set
-  should be able to return some kind of delagate or lambda 
+  where e is an example in the training set
+  Need to make a Binary Search Tree 
 Decide static vs non-static functions
 Decide on public vs private members
 
@@ -17,7 +17,7 @@ Target Feature Y = Name
 y = 1
 Es = [
   Male, White, Finn
-  Male, Black, Bob
+  Male, Black, Bob 
   Female, Black, Barb
 ]
 
@@ -46,3 +46,4 @@ DTL(Cs={Male, White}, Y=Name, Es):
     T([Male, White, Finn]) = if White then Finn else None
     T([Male, Black, Bob]) = if White then None else Bob
     return T
+
