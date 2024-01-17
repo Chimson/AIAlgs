@@ -5,7 +5,7 @@ Make the DecisionTree class hold some data attributes, which will
   remove a lot of the function arguments in
 DecisionTree.Learner() need to return function T(e),
   where e is an example in the training set
-  Need to make a Binary Search Tree 
+  Need to make a Tree, maybe UnionFind or Linked list
 Decide static vs non-static functions
 Decide on public vs private members
 
