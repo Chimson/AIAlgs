@@ -10,5 +10,39 @@ Decide static vs non-static functions
 Decide on public vs private members
 
 Example of T(e) Tree function
-e = ["Known", "New", "Short", "Work", "Reads"]
-T(e) = IfThen(cond) 
+
+Features: Sex->{Male, Female}, Gender->{White, Black}, Name->{Bob, Finn, Barb}
+Cs = {Male, White}
+Target Feature Y = Name
+y = 1
+Es = [
+  Male, White, Finn
+  Male, Black, Bob
+  Female, Black, Barb
+]
+
+DTL(Cs={Male, White}, Y=Name, Es):
+  c = Male
+  te = [Male, White, Finn
+        Male, Black, Bob  
+  ]
+  t1 = DTL(Cs={White}, Y=Name, te):
+    c = White
+    te = [
+      Male, White, Finn  
+    ]
+    t1 = DTL({}, Name, te)
+      c = None
+      v = Finn
+      T([Male, White, Finn]) = Finn
+      return T
+    fe = [
+      Male, Black, Bob
+    ]
+    t0 = DTL({}, Name, fe):
+      c = None
+      T([Male, Black, Bob]) = Bob
+      return T
+    T([Male, White, Finn]) = if White then Finn else None
+    T([Male, Black, Bob]) = if White then None else Bob
+    return T
