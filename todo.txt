@@ -8,6 +8,9 @@ DecisionTree.Learner() need to return function T(e),
   Need to make a Tree, maybe UnionFind or Linked list
 Decide static vs non-static functions
 Decide on public vs private members
+Abstract the Condition Tree for conditions c(e) other than
+  if the example has the condition/enum val then return true, otherwise
+    return false
 
 Example of T(e) Tree function
 
@@ -46,4 +49,22 @@ DTL(Cs={Male, White}, Y=Name, Es):
     T([Male, White, Finn]) = if White then Finn else None
     T([Male, Black, Bob]) = if White then None else Bob
     return T
+
+Tree example
+Features: Sex->{Male, Female}, Gender->{White, Black}, Name->{Bob, Finn, Barb}
+Cs = {Male, White}
+Target Feature Y = Name
+Examples = {[Male, White, Finn],    (This is a complete set)
+						[Male, Black, Bob],
+            [Female, Black, Barb],
+						[Female, White, Mags]}
+      
+
+
+				    Male
+			1/	         \0
+     White         White  
+    1/   \0      1/   \0
+  Finn   Bob    Mags   Barb
+
 
