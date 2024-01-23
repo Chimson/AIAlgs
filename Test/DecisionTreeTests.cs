@@ -77,6 +77,34 @@ public class DecisionTreeTests {
    
   }
 
+	[Test]
+	public void CheckNode() {
+		Node empty = new Node();
+		Console.WriteLine(empty);
+		Node n = new Node(UserAction.Reads);
+		Console.WriteLine(n);
+		Assert.Pass();
+	}
+
+	[Test]
+	public void CheckOptionalNode1() {
+		OptionalNode empty = new OptionalNode();
+		Console.WriteLine(empty);
+		Assert.AreEqual(empty.IsNull(), true);
+		OptionalNode n = new OptionalNode(UserAction.Reads);
+		Console.WriteLine(n);
+		Assert.AreEqual(n.IsNull(), false);
+	}
+
+	[Test]
+	public void CheckOptionalNode2() {
+		OptionalNode n = new OptionalNode(UserAction.Reads);
+		n.AddTNode(WhereRead.Work);
+		n.AddFNode(Length.Long);
+		Console.WriteLine(n);
+	}
+
+
 }
 
 // dotnet test -warnAsMessage:NUnit2005 Test --filter "DecisionTreeTests.CheckSelectSplit1"

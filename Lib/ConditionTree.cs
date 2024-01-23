@@ -7,23 +7,60 @@ namespace Lib;
 
 
 public class Node {
-	public Enum CVal {get; set;} = Empty.None;
+	public Enum CVal;
+	public OptionalNode TNode {get; set;} = new OptionalNode();
+	public OptionalNode FNode {get; set;} = new OptionalNode();
+	
+	public Node() {
+		CVal = Empty.None;
+	}
+
 	public Node(Enum other) {
 		CVal = other;
 	}
-	public OptionalNode TNode {get; set;} = new OptionalNode();
-	public OptionalNode FNode {get; set;} = new OptionalNode();
+	public override string ToString() {
+		return $"({CVal} {TNode} {FNode})";
+	}
+	public void AddTNode(Enum cond) {
+		TNode = new OptionalNode(cond);
+	}
+
+	public void AddFNode(Enum cond) {
+		FNode = new OptionalNode(cond);
+	}
 }
 
 public class OptionalNode {
-	public Node? Node {set; get;} = null;
-	public OptionalNode() {;}
-	public OptionalNode(Node node) {
-		Node = node;
+	public Node? Node;
+	public OptionalNode() {
+		Node = null;
 	}
-	public bool IsEnd() {
+	public OptionalNode(Enum cond) {
+		Node = new Node(cond);
+	}
+	public bool IsNull() {
 		return Node == null;
 	}
+
+	public override string ToString() {
+		if (Node is null) {
+			return "Null";
+		}
+		else {
+			return $"{Node}";
+		}
+	}
+	public void AddTNode(Enum cond) {
+		if (Node is not null) {
+			Node.AddTNode(cond);	
+		}
+	}
+	public void AddFNode(Enum cond) {
+		if (Node is not null) {
+			Node.AddFNode(cond);	
+		}
+	}
+
 	
 }
 
@@ -35,13 +72,17 @@ public class ConditionTree {
 		Root = new OptionalNode();
 	}
 
-	public ConditionTree Add(Enum cond, bool truth) {
+	public void FindLeaf(Example conds, Enum cond, bool addbook) {
+		OptionalNode curnode = Root;
+	}
 
-		if (Root.IsEnd()) {
-			Root = new OptionalNode(new Node(cond));
+	public ConditionTree Add(Example conds, Enum cond, bool addbool) {
+
+		if (Root.IsNull()) {
+			Root = new OptionalNode(cond);
 		}
 		else {
-			
+			FindLeaf(conds, cond, addbool);
 		}
     
 		return this;

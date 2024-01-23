@@ -11,6 +11,9 @@ Decide on public vs private members
 Abstract the Condition Tree for conditions c(e) other than
   if the example has the condition/enum val then return true, otherwise
     return false
+Example is Composition, maybe make it inherit a dictionary
+OptionalNode and Node are a mess, need fixed
+	maybe move the LNode and RNode to OptionalNode
 
 Example of T(e) Tree function
 
