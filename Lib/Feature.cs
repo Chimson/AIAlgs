@@ -15,8 +15,8 @@ public class Feature {
     Val = val;
   }
 
-  public Type GetFeature() {
-    return Val.GetType();
+  public string GetFeature() {
+    return TrimTypeName(Val.GetType());
   } 
 
   public string GetVal() {
@@ -30,6 +30,14 @@ public class Feature {
       this.GetFeature() == other.GetFeature() &&
       this.GetVal() == other.GetVal();
   }
+
+	public static string TrimTypeName(Type type) {
+    string name = $"{type}";
+    string[] namespaces = name.Split(".");
+    return namespaces[namespaces.Count()-1];
+  }
+
+	
 
 }
 

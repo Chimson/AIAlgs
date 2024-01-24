@@ -31,7 +31,7 @@ public class Example {
     return Features;
   } 
 
-  public Enum GetFeature(String feat) {
+  public Enum GetFeatureVal(String feat) {
     return Features[feat];
   }
 
@@ -43,13 +43,23 @@ public class Example {
         return (Enum) result;
       }
     }
-    return None.None;
+    return Empty.None;
   }  
 
-  public static string TrimTypeName(Type type) {
-    string name = $"{type}";
-    string[] namespaces = name.Split(".");
-    return namespaces[namespaces.Count()-1];
-  }
+	public void RemoveCond(Enum cond) {
+		Feature cfeat = new Feature(cond);
+		Features.Remove(cfeat.GetFeature());
+	}
 
+}
+
+public class Examples {
+	public static string ListExamplesStr(List<Example> exs) {
+		string msg = "";
+    foreach (Example ex in exs) {
+      msg += $"{ex.ToString()}\n";
+    }
+    msg = msg.TrimEnd('\n');
+    return msg;
+	}
 }

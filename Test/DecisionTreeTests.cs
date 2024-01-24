@@ -50,7 +50,7 @@ public class DecisionTreeTests {
   public void CheckFindCondTrue1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Enum cond = WhereRead.Home;
-    List<List<Example>> results = DecisionTree.find_cond(data, cond);
+    List<List<Example>> results = DecisionTree.find_cond(data.TrainingSet, cond);
     List<Example> trues = results[0];
     foreach (Example ex in trues) {
       Console.WriteLine($"{ex}");
@@ -63,19 +63,10 @@ public class DecisionTreeTests {
     Example conds = new Example();
     conds.Add("Author", Author.Unknown).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Work);
-    Enum result = DecisionTree.select_split(data, conds, 1.0, "UserAction");
-    Console.WriteLine($"{Example.TrimTypeName(result.GetType())}: {result}");
+    Feature result = new Feature(DecisionTree.select_split(data.TrainingSet, conds, 1.0, "UserAction"));
+    Console.WriteLine($"{result.GetFeature()}: {result.GetVal()}");
   }
 
-  [Test]
-  public void CheckLearner1() {
-    ReadArticleChoiceData data = new ReadArticleChoiceData();
-    Example conds = new Example();
-    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
-      .Add("WhereRead", WhereRead.Home);
-    DecisionTree.Learner(conds, "UserAction", data, 0);
-   
-  }
 
 	[Test]
 	public void CheckNode() {
@@ -83,27 +74,74 @@ public class DecisionTreeTests {
 		Console.WriteLine(empty);
 		Node n = new Node(UserAction.Reads);
 		Console.WriteLine(n);
-		Assert.Pass();
+		Node l = new Node(Length.Long);
+		Node r = new Node(Thread.New);
+		n.AddT(l);
+		n.AddF(r);
+		Console.WriteLine(n);
+		
+	}
+
+
+	[Test]
+	public void CheckConditionTreeAdd1() {
+		
+		Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Home);
+		ConditionTree dt = new ConditionTree();
+		Console.WriteLine(dt);
+		dt.Add(conds, WhereRead.Home);
+		Console.WriteLine(dt);
+		dt.Add(conds, Author.Known);
+		Console.WriteLine(dt);
+
+	}
+
+	
+	[Test]
+	public void CheckConditionTreeAdd2() {
+		
+		ConditionTree dt = new ConditionTree(new Node(WhereRead.Home));
+		Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Work);
+		dt.Add(conds, Author.Known);
+		Console.WriteLine(dt);
+
 	}
 
 	[Test]
-	public void CheckOptionalNode1() {
-		OptionalNode empty = new OptionalNode();
-		Console.WriteLine(empty);
-		Assert.AreEqual(empty.IsNull(), true);
-		OptionalNode n = new OptionalNode(UserAction.Reads);
-		Console.WriteLine(n);
-		Assert.AreEqual(n.IsNull(), false);
+	public void CheckConditionTreeAdd3() {
+		
+		ConditionTree dt = new ConditionTree(new Node(WhereRead.Home));
+		Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Home);
+		Console.WriteLine(dt);
+		dt.Add(conds, Author.Unknown);
+		Console.WriteLine(dt);
+		dt.Add(conds, Thread.New);
+		Console.WriteLine(dt);
 	}
 
-	[Test]
-	public void CheckOptionalNode2() {
-		OptionalNode n = new OptionalNode(UserAction.Reads);
-		n.AddTNode(WhereRead.Work);
-		n.AddFNode(Length.Long);
-		Console.WriteLine(n);
-	}
+  [Test]
+  public void CheckLearner1() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Home);
+    DecisionTree.Learner(conds , "UserAction", data.TrainingSet, 1);
+		// Console.WriteLine(DecisionTree.CT);
+  }
 
+
+	/*
+	(Home, (Unknown, null, (New, null, null)), null)
+	  		      Home
+			Unknown        null
+		null   new
+	*/
 
 }
 

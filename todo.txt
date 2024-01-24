@@ -14,6 +14,16 @@ Abstract the Condition Tree for conditions c(e) other than
 Example is Composition, maybe make it inherit a dictionary
 OptionalNode and Node are a mess, need fixed
 	maybe move the LNode and RNode to OptionalNode
+Add a ToString() for Feature class
+Feature class, for now, basically comes in 
+	and helps retrieve the type string and Enum val values
+	that Example uses in its Dictionary<string, Enum>
+	Is this stupid?
+Renove AddT and AddF functions in Node?
+  maybe just make Node internal
+Learner Recursion works, but needs debugged
+	there is more than one example once break case of recusion, on None cond,
+		is hit, so, that may make the notation make sense in the book
 
 Example of T(e) Tree function
 

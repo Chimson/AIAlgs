@@ -8,84 +8,95 @@ namespace Lib;
 
 public class Node {
 	public Enum CVal;
-	public OptionalNode TNode {get; set;} = new OptionalNode();
-	public OptionalNode FNode {get; set;} = new OptionalNode();
+  public Node? TNode;
+	public Node? FNode;
 	
 	public Node() {
 		CVal = Empty.None;
+		TNode = null;
+		FNode = null;
 	}
 
 	public Node(Enum other) {
 		CVal = other;
 	}
-	public override string ToString() {
-		return $"({CVal} {TNode} {FNode})";
-	}
-	public void AddTNode(Enum cond) {
-		TNode = new OptionalNode(cond);
+
+	public void AddT(Node node) {
+		TNode = node;
 	}
 
-	public void AddFNode(Enum cond) {
-		FNode = new OptionalNode(cond);
+	public void AddF(Node node) {
+		FNode = node;
 	}
-}
 
-public class OptionalNode {
-	public Node? Node;
-	public OptionalNode() {
-		Node = null;
-	}
-	public OptionalNode(Enum cond) {
-		Node = new Node(cond);
-	}
-	public bool IsNull() {
-		return Node == null;
+	public Enum GetCond() {
+		return CVal;
 	}
 
 	public override string ToString() {
-		if (Node is null) {
-			return "Null";
+		string msg = $"({CVal}, ";
+	  if (TNode == null) {
+			msg += "null, ";
 		}
 		else {
-			return $"{Node}";
+			msg += $"{TNode}, ";
 		}
-	}
-	public void AddTNode(Enum cond) {
-		if (Node is not null) {
-			Node.AddTNode(cond);	
+		if (FNode == null) {
+		 	msg += "null)"; 
 		}
-	}
-	public void AddFNode(Enum cond) {
-		if (Node is not null) {
-			Node.AddFNode(cond);	
+		else {
+			msg += $"{FNode})";
 		}
+		return msg;
 	}
 
-	
 }
 
 public class ConditionTree {
 
-	public OptionalNode Root;
+	public Node Root;
 
 	public ConditionTree() {
-		Root = new OptionalNode();
+		Root = new Node();
 	}
 
-	public void FindLeaf(Example conds, Enum cond, bool addbook) {
-		OptionalNode curnode = Root;
+	public ConditionTree(Node node) {
+		Root = node;
 	}
 
-	public ConditionTree Add(Example conds, Enum cond, bool addbool) {
-
-		if (Root.IsNull()) {
-			Root = new OptionalNode(cond);
+	public void AddToLeaf(Node curnode, Example ex, Enum cond) {
+		Feature cnfeat = new Feature(curnode.GetCond());
+		Feature exfeat = new Feature(ex.GetFeatureVal(cnfeat.GetFeature()));
+		if (cnfeat.GetVal() == exfeat.GetVal()) {
+			if (curnode.TNode == null) {
+				curnode.AddT(new Node(cond));
+			}
+			else {
+			  AddToLeaf(curnode.TNode, ex, cond);
+			}
 		}
 		else {
-			FindLeaf(conds, cond, addbool);
+			if (curnode.FNode == null) {
+				curnode.AddF(new Node(cond));
+			}
+			else {
+			  AddToLeaf(curnode.FNode, ex, cond);
+			}
 		}
-    
-		return this;
 	}
 
-}	
+	public void Add(Example conds, Enum cond) {
+
+		if (Root.GetCond().Equals(Empty.None)) {
+			Root = new Node(cond);
+		}
+		else {
+			AddToLeaf(Root, conds, cond);
+		}
+	}
+
+	public override string ToString() {
+		return $"{Root}";
+	}
+
+}

@@ -4,6 +4,8 @@ using Lib.Data;
 
 public class DecisionTree {
 
+	public static ConditionTree CT = new ConditionTree();
+
   public static Enum find_mode(List<Example> examples, string target_feature) {
     
     Dictionary<string, int> counts = new Dictionary<string, int>();
@@ -64,11 +66,11 @@ public class DecisionTree {
     }
   }
 
-  public static List<List<Example>> find_cond(ReadArticleChoiceData examples, Enum cond) {
+  public static List<List<Example>> find_cond(List<Example> examples, Enum cond) {
     List<Example> true_results = new List<Example>();
     List<Example> false_results = new List<Example>();
-    string target = Example.TrimTypeName(cond.GetType());
-    foreach (Example ex in examples.TrainingSet) {
+    string target = (new Feature(cond)).GetFeature();
+    foreach (Example ex in examples) {
       if (ex.Features[target].Equals(cond)) {
         true_results.Add(ex);
       }
@@ -82,12 +84,12 @@ public class DecisionTree {
     return results;
   }
 
-  public static Enum select_split(ReadArticleChoiceData examples, Example conds, 
+  public static Enum select_split(List<Example> examples, Example conds, 
     double min_improv, string target_feature) {
     
-    double best_val = sum_loss(examples.TrainingSet, target_feature) - min_improv;
+    double best_val = sum_loss(examples, target_feature) - min_improv;
 
-    Enum best_split = None.None;
+    Enum best_split = Empty.None;
 
     foreach (Enum cond in conds.Features.Values) {
 
@@ -105,22 +107,29 @@ public class DecisionTree {
     return best_split;
   }
 
-  public static void Learner(Example conds, string target_feature, ReadArticleChoiceData examples, 
-    double min_improv ) {
+  public static void Learner(Example conds, string target_feature, List<Example> examples, 
+    double min_improv) {
 
       Enum cond = select_split(examples, conds, min_improv, target_feature);
+      
+			Console.WriteLine(cond);
 
-      if (cond is None.None) {
-        // complete this block
+			if (cond.Equals(Empty.None)) {
+        // Console.WriteLine(Examples.ListExamplesStr(examples));
       }
       else {
         List<List<Example>> true_and_false = find_cond(examples, cond);
         List<Example> true_exs = true_and_false[0];
-        List<Example> false_exs = true_and_false[1];
-
+				List<Example> false_exs = true_and_false[1];
+				
+				conds.RemoveCond(cond);
+				Learner(conds, target_feature, true_exs, min_improv);
+				Learner(conds, target_feature, false_exs, min_improv);
+        return; 
       }
 
   }
+
 
 }
 
