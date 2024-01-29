@@ -56,12 +56,16 @@ public class ConditionTree {
 
 	public Node Root;
 
+	public List<Example> ExsAdded;
+
 	public ConditionTree() {
 		Root = new Node();
+		ExsAdded = new List<Example>();
 	}
 
 	public ConditionTree(Node node) {
 		Root = node;
+		ExsAdded = new List<Example>();
 	}
 
 	public void AddToLeaf(Node curnode, Example ex, Enum cond) {
@@ -87,11 +91,23 @@ public class ConditionTree {
 
 	public void Add(Example conds, Enum cond) {
 
+		if (ExsAdded.Contains(conds)) {
+			return;
+		}
+
 		if (Root.GetCond().Equals(Empty.None)) {
 			Root = new Node(cond);
 		}
 		else {
 			AddToLeaf(Root, conds, cond);
+			ExsAdded.Add(conds);
+		}
+		
+	}
+
+	public void AddCond(List<Example> exs, Enum cond) {
+		foreach (Example ex in exs) {
+			Add(ex, cond);
 		}
 	}
 

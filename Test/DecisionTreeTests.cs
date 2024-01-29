@@ -125,23 +125,32 @@ public class DecisionTreeTests {
 		Console.WriteLine(dt);
 	}
 
+	[Test]
+	public void CheckConditionTreeAdd4() {
+		// should do nothing if it has already seen an example
+		ConditionTree dt = new ConditionTree(new Node(WhereRead.Home));
+		Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Home);
+		dt.Add(conds, Author.Unknown);
+		Console.WriteLine(dt);
+		dt.Add(conds, Thread.Followup);
+		dt.Add(conds, Length.Short);
+		dt.Add(conds, WhereRead.Home);
+		dt.Add(conds, UserAction.Reads);
+		Console.WriteLine(dt);
+	}
+
   [Test]
   public void CheckLearner1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
     conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Home);
-    DecisionTree.Learner(conds , "UserAction", data.TrainingSet, 1);
-		// Console.WriteLine(DecisionTree.CT);
+    DecisionTree.Learner(conds , "UserAction", data.TrainingSet, 0);
+		Console.WriteLine(DecisionTree.CT);
   }
 
-
-	/*
-	(Home, (Unknown, null, (New, null, null)), null)
-	  		      Home
-			Unknown        null
-		null   new
-	*/
 
 }
 

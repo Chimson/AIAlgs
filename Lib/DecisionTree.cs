@@ -111,11 +111,10 @@ public class DecisionTree {
     double min_improv) {
 
       Enum cond = select_split(examples, conds, min_improv, target_feature);
-      
-			Console.WriteLine(cond);
 
 			if (cond.Equals(Empty.None)) {
-        // Console.WriteLine(Examples.ListExamplesStr(examples));
+				CT.Add(examples[0], examples[0].GetFeatureVal(target_feature));
+				return;
       }
       else {
         List<List<Example>> true_and_false = find_cond(examples, cond);
@@ -125,7 +124,7 @@ public class DecisionTree {
 				conds.RemoveCond(cond);
 				Learner(conds, target_feature, true_exs, min_improv);
 				Learner(conds, target_feature, false_exs, min_improv);
-        return; 
+				return;
       }
 
   }
