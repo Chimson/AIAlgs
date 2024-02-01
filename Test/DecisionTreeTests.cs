@@ -83,73 +83,28 @@ public class DecisionTreeTests {
 	}
 
 
-	[Test]
-	public void CheckConditionTreeAdd1() {
-		
-		Example conds = new Example();
-    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
-      .Add("WhereRead", WhereRead.Home);
-		ConditionTree dt = new ConditionTree();
-		Console.WriteLine(dt);
-		dt.Add(conds, WhereRead.Home);
-		Console.WriteLine(dt);
-		dt.Add(conds, Author.Known);
-		Console.WriteLine(dt);
-
-	}
-
-	
-	[Test]
-	public void CheckConditionTreeAdd2() {
-		
-		ConditionTree dt = new ConditionTree(new Node(WhereRead.Home));
-		Example conds = new Example();
-    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
-      .Add("WhereRead", WhereRead.Work);
-		dt.Add(conds, Author.Known);
-		Console.WriteLine(dt);
-
-	}
-
-	[Test]
-	public void CheckConditionTreeAdd3() {
-		
-		ConditionTree dt = new ConditionTree(new Node(WhereRead.Home));
-		Example conds = new Example();
-    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
-      .Add("WhereRead", WhereRead.Home);
-		Console.WriteLine(dt);
-		dt.Add(conds, Author.Unknown);
-		Console.WriteLine(dt);
-		dt.Add(conds, Thread.New);
-		Console.WriteLine(dt);
-	}
-
-	[Test]
-	public void CheckConditionTreeAdd4() {
-		// should do nothing if it has already seen an example
-		ConditionTree dt = new ConditionTree(new Node(WhereRead.Home));
-		Example conds = new Example();
-    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
-      .Add("WhereRead", WhereRead.Home);
-		dt.Add(conds, Author.Unknown);
-		Console.WriteLine(dt);
-		dt.Add(conds, Thread.Followup);
-		dt.Add(conds, Length.Short);
-		dt.Add(conds, WhereRead.Home);
-		dt.Add(conds, UserAction.Reads);
-		Console.WriteLine(dt);
-	}
-
   [Test]
   public void CheckLearner1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
     conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Home);
-    DecisionTree.Learner(conds , "UserAction", data.TrainingSet, 0);
-		Console.WriteLine(DecisionTree.CT);
+    ConditionTree result = DecisionTree.Learner(conds , "UserAction", data.TrainingSet, 5);
+		Console.WriteLine(result);
   }
+
+	[Test]
+	public void CheckPredict1() {
+		ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+		// conds does not include UserAction, since it is the 
+    conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
+      .Add("WhereRead", WhereRead.Home);
+		DecisionTree.SetConditionTree(conds, "UserAction", data.TrainingSet, 0);
+		Console.WriteLine(DecisionTree.CT);
+		Console.WriteLine(DecisionTree.Predict(conds));
+
+	}
 
 
 }

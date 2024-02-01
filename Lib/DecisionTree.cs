@@ -4,11 +4,12 @@ using Lib.Data;
 
 public class DecisionTree {
 
-	public static ConditionTree CT = new ConditionTree();
+	public static ConditionTree CT = new ConditionTree(); 
 
   public static Enum find_mode(List<Example> examples, string target_feature) {
     
     Dictionary<string, int> counts = new Dictionary<string, int>();
+
  
     // take first examples target feature value, and retrieve's all feature's possible values
     Enum testval = examples[0].Features[target_feature];
@@ -107,28 +108,42 @@ public class DecisionTree {
     return best_split;
   }
 
-  public static void Learner(Example conds, string target_feature, List<Example> examples, 
+  public static ConditionTree Learner(Example conds, string target_feature, List<Example> examples, 
     double min_improv) {
 
       Enum cond = select_split(examples, conds, min_improv, target_feature);
-
 			if (cond.Equals(Empty.None)) {
-				CT.Add(examples[0], examples[0].GetFeatureVal(target_feature));
-				return;
+				ConditionTree one_node = new ConditionTree();
+				one_node.AddRoot(examples[0].GetFeatureVal(target_feature));
+				return one_node;
       }
       else {
         List<List<Example>> true_and_false = find_cond(examples, cond);
         List<Example> true_exs = true_and_false[0];
 				List<Example> false_exs = true_and_false[1];
 				
-				conds.RemoveCond(cond);
-				Learner(conds, target_feature, true_exs, min_improv);
-				Learner(conds, target_feature, false_exs, min_improv);
-				return;
+				Example remconds = conds.Clone();
+				remconds.RemoveCond(cond);
+
+				ConditionTree t1 = Learner(remconds, target_feature, true_exs, min_improv);
+				ConditionTree t2 = Learner(remconds, target_feature, false_exs, min_improv);
+
+				return ConditionTree.ConnectTrees(cond, t1, t2);
+
       }
 
   }
 
+	public static void SetConditionTree(Example conds, string target_feature, List<Example> examples, 
+    double min_impro) {
+		// needs called before Predictio
+		CT = Learner(conds, target_feature, examples, min_impro);
+
+	}
+
+	public static Enum Predict(Example conds) {
+		return CT.Predict(conds);
+	}
 
 }
 

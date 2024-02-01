@@ -9,7 +9,7 @@ public enum None {
 
 public class Feature {
 
-  private Enum Val;
+  public Enum Val;
   
   public Feature(Enum val) {
     Val = val;

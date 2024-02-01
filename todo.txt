@@ -3,17 +3,13 @@ TODO:
 Make Example its own class
 Make the DecisionTree class hold some data attributes, which will
   remove a lot of the function arguments in
-DecisionTree.Learner() need to return function T(e),
-  where e is an example in the training set
-  Need to make a Tree, maybe UnionFind or Linked list
 Decide static vs non-static functions
 Decide on public vs private members
+Choose between get methods and Properties
 Abstract the Condition Tree for conditions c(e) other than
   if the example has the condition/enum val then return true, otherwise
     return false
 Example is Composition, maybe make it inherit a dictionary
-OptionalNode and Node are a mess, need fixed
-	maybe move the LNode and RNode to OptionalNode
 Add a ToString() for Feature class
 Feature class, for now, basically comes in 
 	and helps retrieve the type string and Enum val values
@@ -21,13 +17,20 @@ Feature class, for now, basically comes in
 	Is this stupid?
 Renove AddT and AddF functions in Node?
   maybe just make Node internal
-ConditionTree keeps track of the examples it has already added by
-	keeping a list of Examples, and checking them in Add()
-ConditionTree Add either Adds a node to an empty tree or checks the example
-	given and adds the cond node based on the example
-	Its only this case that keeps track of the example that it has seen
 Really study the example in the book, it tells you how find the 
   prediction for the target feature, and how the recursion works.
+Condition Tree maybe works!
+I think the book is saying, in the decision tree example, that select_split
+  should return None, when all the values of the target feature agree, at
+	the end of the recursion
+Mine doesn't do this, which may have to do with my chosen sum_loss function
+  But it does look like the target feature value has a clear majority
+	I may need to adjust it, at the end of the recursion, when it splits on None
+	   so that it returns a condition tree, where the root node is the majority val 
+Double check that in Learner that it should create a deep copy of the conds example
+  and pass it, with a removed cond, to the two recursive Learner calls
+Needs a lot more testing with more training data and bigger decision trees
+
 
 Example of T(e) Tree function
 
@@ -75,17 +78,27 @@ Examples = {[Male, White, Finn],    (This is a complete set)
 						[Male, Black, Bob],
             [Female, Black, Barb],
 						[Female, White, Mags]}
-				    Male
+				    
+						Male
 			1/	         \0
      White         White  
     1/   \0      1/   \0
   Finn   Bob    Mags   Barb
 
+	
+
 # -----
 
-Example in book
+   Male   (t1)
+  /    \
+null   null
 
+   White   (t2)
+  /     \
+null    null
 
-
-
+       Finn
+      /    \
+     Male   White
+     n  n   n   n
 

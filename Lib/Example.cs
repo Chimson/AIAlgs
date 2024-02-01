@@ -31,6 +31,7 @@ public class Example {
     return Features;
   } 
 
+	// maybe change to GetFeatureEnum
   public Enum GetFeatureVal(String feat) {
     return Features[feat];
   }
@@ -51,7 +52,15 @@ public class Example {
 		Features.Remove(cfeat.GetFeature());
 	}
 
+	public Example Clone() {
+		Example newex = new Example();
+		newex.Features = new Dictionary<string, Enum>(this.Features);
+		newex.Types = new List<Type>(this.Types);
+		return newex;
+	}
+
 }
+
 
 public class Examples {
 	public static string ListExamplesStr(List<Example> exs) {

@@ -56,59 +56,52 @@ public class ConditionTree {
 
 	public Node Root;
 
-	public List<Example> ExsAdded;
 
 	public ConditionTree() {
 		Root = new Node();
-		ExsAdded = new List<Example>();
 	}
 
 	public ConditionTree(Node node) {
 		Root = node;
-		ExsAdded = new List<Example>();
 	}
 
-	public void AddToLeaf(Node curnode, Example ex, Enum cond) {
-		Feature cnfeat = new Feature(curnode.GetCond());
-		Feature exfeat = new Feature(ex.GetFeatureVal(cnfeat.GetFeature()));
-		if (cnfeat.GetVal() == exfeat.GetVal()) {
-			if (curnode.TNode == null) {
-				curnode.AddT(new Node(cond));
-			}
-			else {
-			  AddToLeaf(curnode.TNode, ex, cond);
-			}
-		}
-		else {
-			if (curnode.FNode == null) {
-				curnode.AddF(new Node(cond));
-			}
-			else {
-			  AddToLeaf(curnode.FNode, ex, cond);
-			}
-		}
-	}
-
-	public void Add(Example conds, Enum cond) {
-
-		if (ExsAdded.Contains(conds)) {
-			return;
-		}
+	public void AddRoot(Enum cond) {
 
 		if (Root.GetCond().Equals(Empty.None)) {
 			Root = new Node(cond);
 		}
-		else {
-			AddToLeaf(Root, conds, cond);
-			ExsAdded.Add(conds);
-		}
-		
 	}
 
-	public void AddCond(List<Example> exs, Enum cond) {
-		foreach (Example ex in exs) {
-			Add(ex, cond);
+	public static ConditionTree ConnectTrees(Enum cond, ConditionTree ttree, ConditionTree ftree) {
+		ConditionTree maintree = new ConditionTree(new Node(cond));
+		maintree.Root.AddT(ttree.Root);
+		maintree.Root.AddF(ftree.Root);
+		return maintree;
+	}
+
+	public Enum FindPredictor(Node curnode, Example conds) {
+		if (curnode.CVal.Equals(Empty.None)) {
+			return Empty.None;
 		}
+		else {
+	    Feature curfeat = new Feature(curnode.CVal);
+			if (curnode.TNode == null && curnode.FNode == null) {
+				return curfeat.Val;
+			}
+			else {
+				Feature condsfeat = new Feature(conds.GetFeatures()[curfeat.GetFeature()]);
+				if (curfeat.Equals(condsfeat)) { 
+					return FindPredictor(curnode.TNode, conds);
+				}
+				else { 
+					return FindPredictor(curnode.FNode, conds);
+				}
+			}
+		}
+	}
+
+	public Enum Predict(Example conds) {
+		return FindPredictor(Root, conds);
 	}
 
 	public override string ToString() {
