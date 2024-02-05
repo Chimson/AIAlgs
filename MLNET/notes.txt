@@ -1,0 +1,41 @@
+INSTALL ML.NET
+> dotnet tool install -g mlnet-osx-arm64
+
+RUN ML.NET CONSOLE
+// mlnet command is in ~/.dotnet/tools
+// may need to add this to $PATH
+> ~/./dotnet/tools
+
+myMLApp
+
+SETUP
+// from "ML.NET Tutorial - Get Started in Ten Minutes"
+// this is the classification tutorial that involves yelp reviews
+// download the data and unzip it to folder "sentiment labelled sentences"
+
+RUN ML.NET
+~/.dotnet/tools/mlnet classification --dataset "../sentiment labelled sentences/yelp_labelled.txt" --label-col 1 --has-header false --name SentimentModel  --train-time 60
+
+|--------------------------------------------------------------------|
+|                          Experiment Results                        |
+|--------------------------------------------------------------------|
+|                               Summary                              |
+|--------------------------------------------------------------------|
+|ML Task: multiclass classification                                  |
+|Dataset: /Users/benharki/Programming/Repos/AIAlgs/MLNET/sentiment labelled sentences/yelp_labelled.txt|
+|Label : col1                                                        |
+|Total experiment time :    60.0000 Secs                             |
+|Total number of models explored: 502                                |
+|--------------------------------------------------------------------|
+|                        Top 5 models explored                       |
+|--------------------------------------------------------------------|
+|      Trainer                             MacroAccuracy Duration    |
+|--------------------------------------------------------------------|
+|35    LbfgsMaximumEntropyMulti            0.8724     0.0470         |
+|54    LbfgsMaximumEntropyMulti            0.8724     0.0550         |
+|55    LbfgsMaximumEntropyMulti            0.8724     0.0460         |
+|59    LbfgsMaximumEntropyMulti            0.8724     0.0550         |
+|60    LbfgsMaximumEntropyMulti            0.8724     0.0530         |
+|--------------------------------------------------------------------|
+
+MLNET COMMANDS
