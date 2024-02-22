@@ -95,17 +95,29 @@ public class DecisionTreeTests {
 
 	[Test]
 	public void CheckPredict1() {
+		// conds does not include UserAction, since it is the target feature
 		ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
-		// conds does not include UserAction, since it is the 
     conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Home);
 		DecisionTree.SetConditionTree(conds, "UserAction", data.TrainingSet, 0);
 		Console.WriteLine(DecisionTree.CT);
+    Console.WriteLine(data);
 		Console.WriteLine(DecisionTree.Predict(conds));
 
 	}
 
+  [Test]
+  public void CheckPredict2() {
+    // predict on the "Thread" feature
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Length", Length.Long).Add("WhereRead", WhereRead.Home)
+      .Add("UserAction", UserAction.Reads);
+    DecisionTree.SetConditionTree(conds, "Thread", data.TrainingSet, 0);
+    Console.WriteLine(DecisionTree.CT);
+    Console.WriteLine(DecisionTree.Predict(conds));
+  }  
 
 }
 

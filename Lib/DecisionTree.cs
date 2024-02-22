@@ -7,7 +7,10 @@ public class DecisionTree {
 	public static ConditionTree CT = new ConditionTree(); 
 
   public static Enum find_mode(List<Example> examples, string target_feature) {
+
+    // TODO: deal with the case where the list of examples is empty
     
+
     Dictionary<string, int> counts = new Dictionary<string, int>();
 
  
