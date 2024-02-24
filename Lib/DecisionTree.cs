@@ -9,7 +9,9 @@ public class DecisionTree {
   public static Enum find_mode(List<Example> examples, string target_feature) {
 
     // TODO: deal with the case where the list of examples is empty
-    
+    if (examples.Count == 0) {
+      return None.None;
+    }
 
     Dictionary<string, int> counts = new Dictionary<string, int>();
 

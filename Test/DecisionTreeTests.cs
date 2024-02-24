@@ -115,6 +115,19 @@ public class DecisionTreeTests {
     conds.Add("Author", Author.Known).Add("Length", Length.Long).Add("WhereRead", WhereRead.Home)
       .Add("UserAction", UserAction.Reads);
     DecisionTree.SetConditionTree(conds, "Thread", data.TrainingSet, 0);
+    Console.WriteLine(data);
+    Console.WriteLine(DecisionTree.CT);
+    Console.WriteLine(DecisionTree.Predict(conds));
+  }  
+
+  [Test]
+  public void CheckPredict3() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Author", Author.Unknown).Add("Thread", Thread.Followup).Add("WhereRead", WhereRead.Work)
+      .Add("UserAction", UserAction.Reads);
+    DecisionTree.SetConditionTree(conds, "Length", data.TrainingSet, 0);
+    Console.WriteLine(data);
     Console.WriteLine(DecisionTree.CT);
     Console.WriteLine(DecisionTree.Predict(conds));
   }  
