@@ -1,0 +1,71 @@
+/Data
+  ReadArticleChoiceData.cs
+    class ReadArticleChoiceData
+      List<Example> TrainingSet
+      ReadArticleChoiceData()
+      string ToString()
+  enum Author
+  enum Thread
+  enum Length
+  enum WhereRead
+  enum UserAction
+
+ConditionTree.cs
+  class Node
+    Enum CVal
+    Node? TNode
+    Node? FNode
+    Node()
+    Node(Enum)
+    void AddT(Node)
+    void AddF(Node)
+    Enum GetCond()
+    string ToString()
+  class ConditionTree
+    Node Root
+    ConditionTree()
+    ConditionTree(Node)
+    void AddRoot(Enum)
+    ConditionTree ConnectTrees(Enum, ConditionTree, ConditionTree)
+    Enum FindPredictor(Node, Example)
+    Enum Predict(Example)
+    string ToString()
+DecisionTree.cs
+  class DecisionTree
+    ConditionTree CT
+    Enum find_mode(List<Examples>, string)
+    double sum_loss(List<Example>, string)
+    double loss(Enum, Enum)
+    List<List<Example>> find_cond(List<Example>, Enum)
+    Enum select_split(List<Example>, Example)
+    ConditionTree Learner(Example, string, List<Example>)
+    void SetConditionTree(Example, string, List<Example>, double)
+    Enum Predict(Example)
+
+Empty.cs
+  enum Empty
+
+Example.cs  
+  class Example
+    Dictionary<String, Enum> Features
+    List<Type> Types
+    Example()
+    string ToString()
+    Example Add(String, Enum)
+    Dictionary<string, Enum> GetFeatures()
+    Enum GetFeatureVal(string)
+    Enum ConvertToEnum(string)
+    void RemoveCond(Enum)
+    Example Clone()
+  class Examples
+    string ListExamplesStr(List<Example>)
+
+Feature.cs
+  enum None
+  class Feature
+    Enum Val
+    Feature(Enum)
+    string GetFeature()
+    string GetVal()
+    bool Equals(Feature)
+    string TrimTypeName(Type)
