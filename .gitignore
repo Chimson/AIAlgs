@@ -5,4 +5,5 @@
 /Test/bin
 /Test/obj
 /.vs
+/.vscode
 .DS_Store
