@@ -10,15 +10,14 @@ public class DecisionTree {
 
     // TODO: deal with the case where the list of examples is empty
     if (examples.Count == 0) {
-      return None.None;
+      return Empty.None;
     }
 
     Dictionary<string, int> counts = new Dictionary<string, int>();
 
  
     // take first examples target feature value, and retrieve's all feature's possible values
-    Enum testval = examples[0].Features[target_feature];
-    string[] tvals = Enum.GetNames(testval.GetType());
+    string[] tvals = examples[0].AllPossValsForFeat(target_feature);
 
     // Initialize the dictionary for the counts
     foreach (string s in tvals) {
@@ -72,10 +71,12 @@ public class DecisionTree {
     }
   }
 
+  // returns two lists, one of examples thats contains the condition
+  // thw other where it doesn't
   public static List<List<Example>> find_cond(List<Example> examples, Enum cond) {
     List<Example> true_results = new List<Example>();
     List<Example> false_results = new List<Example>();
-    string target = (new Feature(cond)).GetFeature();
+    string target = Example.GetFeature(cond);
     foreach (Example ex in examples) {
       if (ex.Features[target].Equals(cond)) {
         true_results.Add(ex);

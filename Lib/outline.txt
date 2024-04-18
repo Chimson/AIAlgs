@@ -30,6 +30,7 @@ ConditionTree.cs
     Enum FindPredictor(Node, Example)
     Enum Predict(Example)
     string ToString()
+
 DecisionTree.cs
   class DecisionTree
     ConditionTree CT
@@ -61,7 +62,6 @@ Example.cs
     string ListExamplesStr(List<Example>)
 
 Feature.cs
-  enum None
   class Feature
     Enum Val
     Feature(Enum)

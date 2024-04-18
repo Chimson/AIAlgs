@@ -22,9 +22,10 @@ public enum UserAction {
 
 
 public class ReadArticleChoiceData {
-  public List<Example> TrainingSet = new List<Example>(); 
+  public List<Example> TrainingSet {get;}
   
   public ReadArticleChoiceData() {
+    TrainingSet = new List<Example>();
     TrainingSet.Add((new Example())
       .Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Home).Add("UserAction", UserAction.Skips));
@@ -92,3 +93,25 @@ public class ReadArticleChoiceData {
 
 }
 
+/*
+(18 Examples total)
+AUTHOR   THREAD    LENGTH WHEREREAD USERACTION
+Known    New       Long   Home      Skips
+Unknown  New       Short  Work      Reads
+Unknown  Followup  Long   Work      Skips
+Known    Followup  Long   Home      Skips
+Known    New       Short  Home      Reads
+Known    Followup  Long   Work      Skips
+Unknown  Followup  Short  Work      Skips
+Unknown  New       Short  Work      Reads
+Known    Followup  Long   Home      Skips
+Known    New       Long   Work      Skips
+Unknown  Followup  Short  Home      Skips
+Known    New       Long   Work      Skips
+Known    Followup  Short  Home      Reads
+Known    New       Short  Work      Reads
+Known    New       Short  Home      Reads
+Known    Followup  Short  Work      Reads
+Known    New       Short  Home      Reads
+Unknown  New       Short  Work      Reads
+*/

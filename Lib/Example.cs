@@ -1,12 +1,15 @@
+using System.Reflection.Metadata;
+
 namespace Lib;
 
 public class Example {
 
-  public Dictionary<String, Enum> Features;
-  public List<Type> Types = new List<Type>();
+  public Dictionary<String, Enum> Features {get;}
+  public List<Type> Types {get;}
   
   public Example() {
     Features = new Dictionary<String, Enum>();
+    Types = new List<Type>();
   }
 
   public override string ToString() {
@@ -27,14 +30,16 @@ public class Example {
     return this;
   }
 
-  public Dictionary<string, Enum> GetFeatures() {
-    return Features;
-  } 
-
 	// maybe change to GetFeatureEnum
   public Enum GetFeatureVal(String feat) {
     return Features[feat];
   }
+
+  public string[] AllPossValsForFeat(string feature) {
+    Enum val = this.GetFeatureVal(feature);
+    return Enum.GetNames(val.GetType());
+  }
+
 
   public Enum ConvertToEnum(string tval) {
     object? result;
@@ -48,16 +53,27 @@ public class Example {
   }  
 
 	public void RemoveCond(Enum cond) {
-		Feature cfeat = new Feature(cond);
-		Features.Remove(cfeat.GetFeature());
+		Features.Remove(Example.GetFeature(cond));
 	}
 
 	public Example Clone() {
 		Example newex = new Example();
-		newex.Features = new Dictionary<string, Enum>(this.Features);
-		newex.Types = new List<Type>(this.Types);
+    foreach (KeyValuePair<String, Enum> kvp in Features) {
+      newex.Add(kvp.Key, kvp.Value);  
+    }
 		return newex;
 	}
+
+
+  public static string TrimTypeName(Type type) {
+    string name = $"{type}";
+    string[] namespaces = name.Split(".");
+    return namespaces[namespaces.Count()-1];
+  }
+
+  public static string GetFeature(Enum val) {
+    return TrimTypeName(val.GetType());
+  } 
 
 }
 
@@ -72,3 +88,4 @@ public class Examples {
     return msg;
 	}
 }
+

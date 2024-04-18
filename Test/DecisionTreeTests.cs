@@ -26,12 +26,21 @@ public class DecisionTreeTests {
   public void CheckFindMode1() {
     ReadArticleChoiceData init = new ReadArticleChoiceData();
     List<Example> data = init.TrainingSet;
-    Console.WriteLine($"{DecisionTree.find_mode(data, "Author")}");
-    Console.WriteLine($"{DecisionTree.find_mode(data, "Thread")}");
-    Console.WriteLine($"{DecisionTree.find_mode(data, "Length")}");
-    Console.WriteLine($"{DecisionTree.find_mode(data, "WhereRead")}");
-    Console.WriteLine($"{DecisionTree.find_mode(data, "UserAction")}");
-    Assert.Pass();
+    Enum amode = DecisionTree.find_mode(data, "Author");
+    Enum tmode = DecisionTree.find_mode(data, "Thread");
+    Enum lmode = DecisionTree.find_mode(data, "Length");
+    Enum wmode = DecisionTree.find_mode(data, "WhereRead");
+    Enum umode = DecisionTree.find_mode(data, "UserAction");
+    Assert.That(amode, Is.EqualTo(Author.Known));
+    Assert.That(tmode, Is.EqualTo(Thread.New));
+    Assert.That(lmode, Is.EqualTo(Length.Short));
+    Assert.That(wmode, Is.EqualTo(WhereRead.Work));
+    Assert.That(umode, Is.EqualTo(UserAction.Reads));
+    Console.WriteLine($"Author mode: {amode}");
+    Console.WriteLine($"Thread mode: {tmode}");
+    Console.WriteLine($"Length mode: {lmode}");
+    Console.WriteLine($"WhereRead mode: {wmode}");
+    Console.WriteLine($"UserAction mode: {umode}");
   }
 
 
@@ -41,9 +50,44 @@ public class DecisionTreeTests {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     
     double sum_loss = DecisionTree.sum_loss(data.TrainingSet, "UserAction");
-    Console.WriteLine($"sum_loss = {sum_loss}");
-    Assert.AreEqual(sum_loss, 9.0);    // there are 9 Reads and 9 Skips for target feature User_Action
+    Console.WriteLine($"sum_loss on UserAction = {sum_loss}");
+    Assert.That(sum_loss, Is.EqualTo(9.0));    
+  }
 
+  [Test]
+  public void CheckSumLoss2() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    
+    double sum_loss = DecisionTree.sum_loss(data.TrainingSet, "WhereRead");
+    Console.WriteLine($"sum_loss on WhereRead = {sum_loss}");
+    Assert.That(sum_loss, Is.EqualTo(8.0));    
+  }
+
+  [Test]
+  public void CheckSumLoss3() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    
+    double sum_loss = DecisionTree.sum_loss(data.TrainingSet, "Length");
+    Console.WriteLine($"sum_loss on Length = {sum_loss}");
+    Assert.That(sum_loss, Is.EqualTo(7.0));    
+  }
+
+  [Test]
+  public void CheckSumLoss4() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    
+    double sum_loss = DecisionTree.sum_loss(data.TrainingSet, "Thread");
+    Console.WriteLine($"sum_loss on Thread = {sum_loss}");
+    Assert.That(sum_loss, Is.EqualTo(8.0));    
+  }
+
+  [Test]
+  public void CheckSumLoss5() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    
+    double sum_loss = DecisionTree.sum_loss(data.TrainingSet, "Author");
+    Console.WriteLine($"sum_loss on Author = {sum_loss}");
+    Assert.That(sum_loss, Is.EqualTo(6.0));    
   }
 
   [Test]
@@ -52,19 +96,36 @@ public class DecisionTreeTests {
     Enum cond = WhereRead.Home;
     List<List<Example>> results = DecisionTree.find_cond(data.TrainingSet, cond);
     List<Example> trues = results[0];
+    Console.WriteLine($"All of the examples should have WhereRead: Home");
     foreach (Example ex in trues) {
       Console.WriteLine($"{ex}");
+      Assert.That(ex.Features["WhereRead"], Is.EqualTo(WhereRead.Home));
     }
   }
 
   [Test]
+  public void CheckFindCondTrue2() {
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Enum cond = WhereRead.Home;
+    List<List<Example>> results = DecisionTree.find_cond(data.TrainingSet, cond);
+    List<Example> falses = results[1];
+    Console.WriteLine($"All of the examples should not have WhereRead: Home");
+    foreach (Example ex in falses) {
+      Console.WriteLine($"{ex}");
+      Assert.That(ex.Features["WhereRead"], Is.Not.EqualTo(WhereRead.Home));
+    }
+  }
+
+
+  // STOPPED HERE ON REVIEW
+  [Test]
   public void CheckSelectSplit1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
-    conds.Add("Author", Author.Unknown).Add("Thread", Thread.New).Add("Length", Length.Long)
-      .Add("WhereRead", WhereRead.Work);
-    Feature result = new Feature(DecisionTree.select_split(data.TrainingSet, conds, 1.0, "UserAction"));
-    Console.WriteLine($"{result.GetFeature()}: {result.GetVal()}");
+    conds.Add("Author", Author.Unknown).Add("Thread", Thread.New)
+         .Add("Length", Length.Long).Add("WhereRead", WhereRead.Work);
+    Enum result = DecisionTree.select_split(data.TrainingSet, conds, 1.0, "UserAction");
+    Console.WriteLine($"{Example.GetFeature(result)}: {result}");
   }
 
 

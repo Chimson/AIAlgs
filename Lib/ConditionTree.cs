@@ -84,13 +84,12 @@ public class ConditionTree {
 			return Empty.None;
 		}
 		else {
-	    Feature curfeat = new Feature(curnode.CVal);
 			if (curnode.TNode == null && curnode.FNode == null) {
-				return curfeat.Val;
+				return curnode.CVal;
 			}
 			else {
-				Feature condsfeat = new Feature(conds.GetFeatures()[curfeat.GetFeature()]);
-				if (curfeat.Equals(condsfeat)) { 
+        Enum condsfeat = conds.Features[Example.GetFeature(curnode.CVal)];
+        if (curnode.CVal.Equals(condsfeat)) { 
 					return FindPredictor(curnode.TNode, conds);
 				}
 				else { 
