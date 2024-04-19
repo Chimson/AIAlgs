@@ -6,94 +6,41 @@
 namespace Lib; 
 
 
-public class Node {
-	public Enum CVal;
-  public Node? TNode;
-	public Node? FNode;
-	
-	public Node() {
-		CVal = Empty.None;
-		TNode = null;
-		FNode = null;
-	}
-
-	public Node(Enum other) {
-		CVal = other;
-	}
-
-	public void AddT(Node node) {
-		TNode = node;
-	}
-
-	public void AddF(Node node) {
-		FNode = node;
-	}
-
-	public Enum GetCond() {
-		return CVal;
-	}
-
-	public override string ToString() {
-		string msg = $"({CVal}, ";
-	  if (TNode == null) {
-			msg += "null, ";
-		}
-		else {
-			msg += $"{TNode}, ";
-		}
-		if (FNode == null) {
-		 	msg += "null)"; 
-		}
-		else {
-			msg += $"{FNode})";
-		}
-		return msg;
-	}
-
-}
-
 public class ConditionTree {
 
-	public Node Root;
+	private Node Root;
 
 
 	public ConditionTree() {
 		Root = new Node();
 	}
 
-	public ConditionTree(Node node) {
-		Root = node;
-	}
-
-	public void AddRoot(Enum cond) {
-
-		if (Root.GetCond().Equals(Empty.None)) {
-			Root = new Node(cond);
-		}
+	public ConditionTree(Enum cond) {
+		Root = new Node(cond);
 	}
 
 	public static ConditionTree ConnectTrees(Enum cond, ConditionTree ttree, ConditionTree ftree) {
-		ConditionTree maintree = new ConditionTree(new Node(cond));
+		ConditionTree maintree = new ConditionTree(cond);
 		maintree.Root.AddT(ttree.Root);
 		maintree.Root.AddF(ftree.Root);
 		return maintree;
 	}
 
-	public Enum FindPredictor(Node curnode, Example conds) {
-		if (curnode.CVal.Equals(Empty.None)) {
+	private Enum FindPredictor(Node curnode, Example conds) {
+		if (curnode.GetCVal().Equals(Empty.None)) {
 			return Empty.None;
 		}
 		else {
-			if (curnode.TNode == null && curnode.FNode == null) {
-				return curnode.CVal;
+			if (curnode.GetT() == null && curnode.GetF() == null) {
+				return curnode.GetCVal();
 			}
 			else {
-        Enum condsfeat = conds.Features[Example.GetFeature(curnode.CVal)];
-        if (curnode.CVal.Equals(condsfeat)) { 
-					return FindPredictor(curnode.TNode, conds);
+        // Enum condsfeat = conds.Features[Example.GetFeature(curnode.GetCVal())];
+        if (conds.FindFeatVal(curnode.GetCVal())) { 
+					return FindPredictor(curnode.GetT(), conds);
 				}
 				else { 
-					return FindPredictor(curnode.FNode, conds);
+					return FindPredictor(curnode.GetF(), conds);
 				}
 			}
 		}

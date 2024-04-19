@@ -117,7 +117,6 @@ public class DecisionTreeTests {
   }
 
 
-  // STOPPED HERE ON REVIEW
   [Test]
   public void CheckSelectSplit1() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
@@ -125,7 +124,8 @@ public class DecisionTreeTests {
     conds.Add("Author", Author.Unknown).Add("Thread", Thread.New)
          .Add("Length", Length.Long).Add("WhereRead", WhereRead.Work);
     Enum result = DecisionTree.select_split(data.TrainingSet, conds, 1.0, "UserAction");
-    Console.WriteLine($"{Example.GetFeature(result)}: {result}");
+    Assert.That(result, Is.EqualTo(Length.Long));
+    Console.WriteLine($"{conds} splits on {Example.GetFeature(result)}: {result}, for target UserAction");
   }
 
 
@@ -140,19 +140,111 @@ public class DecisionTreeTests {
 		n.AddT(l);
 		n.AddF(r);
 		Console.WriteLine(n);
-		
+    Assert.Pass();
 	}
 
+  [Test]
+  public void CheckConditionTree1() {
+    ConditionTree at = new ConditionTree(Thread.New);
+    ConditionTree af = new ConditionTree(Length.Long);
+    ConditionTree tree1 = ConditionTree.ConnectTrees(Author.Known, at, af);
+    ConditionTree bt = new ConditionTree(WhereRead.Home);
+    ConditionTree bf = new ConditionTree(UserAction.Skips);
+    ConditionTree tree2 = ConditionTree.ConnectTrees(Author.Unknown, bt, bf);
+    ConditionTree root = ConditionTree.ConnectTrees(Thread.Followup, tree1, tree2);
+    Console.WriteLine($"{root}");
+    Assert.Pass();
+  }
+  /*
+    (Followup, 
+      (Known,   
+        (New, null, null),
+        (Long, null, null)),
+      (Unknown, 
+        (Home, null, null), 
+        (Skips, null, null)))
+  */
 
   [Test]
-  public void CheckLearner1() {
+  public void CheckExFindFeatVal() {
+    Example conds = new Example();
+    conds.Add("Author", Author.Unknown).Add("Thread", Thread.New)
+         .Add("Length", Length.Long).Add("WhereRead", WhereRead.Work);
+    Assert.That(conds.FindFeatVal(Author.Unknown), Is.EqualTo(true));
+    Assert.That(conds.FindFeatVal(Author.Known), Is.EqualTo(false));
+    Assert.That(conds.FindFeatVal(Thread.New), Is.EqualTo(true));
+    Assert.That(conds.FindFeatVal(Thread.Followup), Is.EqualTo(false));
+  }
+
+  [Test]
+  public void CheckFindPredictor1() {
+    Example conds = new Example();
+    conds.Add("Author", Author.Unknown).Add("Thread", Thread.New)
+         .Add("Length", Length.Long).Add("WhereRead", WhereRead.Work);
+    ConditionTree at = new ConditionTree(Thread.New);
+    ConditionTree af = new ConditionTree(Length.Long);
+    ConditionTree tree1 = ConditionTree.ConnectTrees(Author.Known, at, af);
+    ConditionTree bt = new ConditionTree(WhereRead.Home);
+    ConditionTree bf = new ConditionTree(UserAction.Skips);
+    ConditionTree tree2 = ConditionTree.ConnectTrees(Author.Unknown, bt, bf);
+    ConditionTree root = ConditionTree.ConnectTrees(Thread.Followup, tree1, tree2);
+
+    Enum result = root.Predict(conds);
+    Assert.That(result, Is.EqualTo(WhereRead.Home));
+    Console.WriteLine($"{result}");    
+  }
+  /*
+    (Followup,                      // False
+      (Known,   
+        (New, null, null),
+        (Long, null, null)),
+      (Unknown,                     // True
+      (Home, null, null),           // return 
+        (Skips, null, null)))
+  */
+
+  [Test]
+  public void CheckFindPredictor2() {
+    Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.Followup)
+         .Add("Length", Length.Long).Add("WhereRead", WhereRead.Work);
+    ConditionTree at = new ConditionTree(Thread.New);
+    ConditionTree af = new ConditionTree(Length.Long);
+    ConditionTree tree1 = ConditionTree.ConnectTrees(Author.Known, at, af);
+    ConditionTree bt = new ConditionTree(WhereRead.Home);
+    ConditionTree bf = new ConditionTree(UserAction.Skips);
+    ConditionTree tree2 = ConditionTree.ConnectTrees(Author.Unknown, bt, bf);
+    ConditionTree root = ConditionTree.ConnectTrees(Thread.Followup, tree1, tree2);
+
+    Enum result = root.Predict(conds);
+    Assert.That(result, Is.EqualTo(Thread.New));
+    Console.WriteLine($"{result}");    
+  }
+
+  /*
+    (Followup,                    // True                  
+      (Known,                     // True
+        (New, null, null),        // return    
+        (Long, null, null)),
+      (Unknown,                     
+        (Home, null, null),       
+        (Skips, null, null)))
+  */
+
+  // this only checks the tree
+  [Test]
+  public void CheckLearnerTree() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
     conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Home);
-    ConditionTree result = DecisionTree.Learner(conds , "UserAction", data.TrainingSet, 5);
-		Console.WriteLine(result);
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds , "UserAction", data.TrainingSet, 0);
+		Console.WriteLine(d);
+    Assert.Pass();
   }
+
+
 
 	[Test]
 	public void CheckPredict1() {
@@ -161,12 +253,16 @@ public class DecisionTreeTests {
     Example conds = new Example();
     conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
       .Add("WhereRead", WhereRead.Home);
-		DecisionTree.SetConditionTree(conds, "UserAction", data.TrainingSet, 0);
-		Console.WriteLine(DecisionTree.CT);
-    Console.WriteLine(data);
-		Console.WriteLine(DecisionTree.Predict(conds));
-
+		DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "UserAction", data.TrainingSet, 0);
+		Console.WriteLine(d);
+		Console.WriteLine(d.Predict(conds));
 	}
+  /*
+  (Long, 
+    (Skips, null, null), 
+    (Reads, null, null))
+  */
 
   [Test]
   public void CheckPredict2() {
@@ -175,11 +271,16 @@ public class DecisionTreeTests {
     Example conds = new Example();
     conds.Add("Author", Author.Known).Add("Length", Length.Long).Add("WhereRead", WhereRead.Home)
       .Add("UserAction", UserAction.Reads);
-    DecisionTree.SetConditionTree(conds, "Thread", data.TrainingSet, 0);
-    Console.WriteLine(data);
-    Console.WriteLine(DecisionTree.CT);
-    Console.WriteLine(DecisionTree.Predict(conds));
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "Thread", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
   }  
+  /*
+  (Reads, 
+    (New, null, null), 
+    (New, null, null))
+  */
 
   [Test]
   public void CheckPredict3() {
@@ -187,11 +288,18 @@ public class DecisionTreeTests {
     Example conds = new Example();
     conds.Add("Author", Author.Unknown).Add("Thread", Thread.Followup).Add("WhereRead", WhereRead.Work)
       .Add("UserAction", UserAction.Reads);
-    DecisionTree.SetConditionTree(conds, "Length", data.TrainingSet, 0);
-    Console.WriteLine(data);
-    Console.WriteLine(DecisionTree.CT);
-    Console.WriteLine(DecisionTree.Predict(conds));
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "Length", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
   }  
+  /*
+    (Reads, 
+      (Short, null, null), 
+      (Unknown, 
+        (Long, null, null), 
+        (Long, null, null)))
+  */
 
 }
 

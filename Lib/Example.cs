@@ -30,13 +30,8 @@ public class Example {
     return this;
   }
 
-	// maybe change to GetFeatureEnum
-  public Enum GetFeatureVal(String feat) {
-    return Features[feat];
-  }
-
   public string[] AllPossValsForFeat(string feature) {
-    Enum val = this.GetFeatureVal(feature);
+    Enum val = this.Features[feature];
     return Enum.GetNames(val.GetType());
   }
 
@@ -74,6 +69,10 @@ public class Example {
   public static string GetFeature(Enum val) {
     return TrimTypeName(val.GetType());
   } 
+
+  public bool FindFeatVal(Enum val) {
+    return Features.ContainsValue(val);
+  }
 
 }
 

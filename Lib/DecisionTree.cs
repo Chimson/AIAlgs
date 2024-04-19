@@ -4,7 +4,12 @@ using Lib.Data;
 
 public class DecisionTree {
 
-	public static ConditionTree CT = new ConditionTree(); 
+  private ConditionTree CT;
+
+  public DecisionTree() {
+    CT = new ConditionTree();
+  }
+
 
   public static Enum find_mode(List<Example> examples, string target_feature) {
 
@@ -91,6 +96,8 @@ public class DecisionTree {
     return results;
   }
 
+
+  // min_improv is a minimum threshold that allows a split
   public static Enum select_split(List<Example> examples, Example conds, 
     double min_improv, string target_feature) {
     
@@ -114,13 +121,13 @@ public class DecisionTree {
     return best_split;
   }
 
-  public static ConditionTree Learner(Example conds, string target_feature, List<Example> examples, 
+  private ConditionTree Learner(Example conds, string target_feature, List<Example> examples, 
     double min_improv) {
 
       Enum cond = select_split(examples, conds, min_improv, target_feature);
 			if (cond.Equals(Empty.None)) {
-				ConditionTree one_node = new ConditionTree();
-				one_node.AddRoot(examples[0].GetFeatureVal(target_feature));
+				ConditionTree one_node = 
+          new ConditionTree(examples[0].Features[target_feature]);
 				return one_node;
       }
       else {
@@ -140,16 +147,20 @@ public class DecisionTree {
 
   }
 
-	public static void SetConditionTree(Example conds, string target_feature, List<Example> examples, 
+	public void SetConditionTree(Example conds, string target_feature, List<Example> examples, 
     double min_impro) {
-		// needs called before Predictio
+		// needs called before Predict
 		CT = Learner(conds, target_feature, examples, min_impro);
 
 	}
 
-	public static Enum Predict(Example conds) {
+	public Enum Predict(Example conds) {
 		return CT.Predict(conds);
 	}
+
+  public override string ToString() {
+    return $"{CT}";
+  }
 
 }
 
