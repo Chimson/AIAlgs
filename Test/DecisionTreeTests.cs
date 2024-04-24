@@ -231,7 +231,7 @@ public class DecisionTreeTests {
         (Skips, null, null)))
   */
 
-  // this only checks the tree
+  // this only prints the tree
   [Test]
   public void CheckLearnerTree() {
     ReadArticleChoiceData data = new ReadArticleChoiceData();
@@ -248,7 +248,7 @@ public class DecisionTreeTests {
 
 	[Test]
 	public void CheckPredict1() {
-		// conds does not include UserAction, since it is the target feature
+		// predict on UserAction
 		ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
     conds.Add("Author", Author.Known).Add("Thread", Thread.New).Add("Length", Length.Long)
@@ -284,6 +284,7 @@ public class DecisionTreeTests {
 
   [Test]
   public void CheckPredict3() {
+    // Predict on Length
     ReadArticleChoiceData data = new ReadArticleChoiceData();
     Example conds = new Example();
     conds.Add("Author", Author.Unknown).Add("Thread", Thread.Followup).Add("WhereRead", WhereRead.Work)

@@ -35,7 +35,6 @@ public class ConditionTree {
 				return curnode.GetCVal();
 			}
 			else {
-        // Enum condsfeat = conds.Features[Example.GetFeature(curnode.GetCVal())];
         if (conds.FindFeatVal(curnode.GetCVal())) { 
 					return FindPredictor(curnode.GetT(), conds);
 				}
