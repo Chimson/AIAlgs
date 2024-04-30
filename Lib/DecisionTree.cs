@@ -2,6 +2,9 @@ namespace Lib;
 
 using Lib.Data;
 
+// assumes that the target feature is categorical for classification
+// this also produces a tree, dependent on the given conditions
+
 public class DecisionTree {
 
   private ConditionTree CT;

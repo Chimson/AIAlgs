@@ -301,7 +301,73 @@ public class DecisionTreeTests {
         (Long, null, null), 
         (Long, null, null)))
   */
+  [Test]
+  public void CheckPredict4() {
+    // Predict on Author
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Thread", Thread.Followup).Add("Length", Length.Long).Add("WhereRead", WhereRead.Work)
+      .Add("UserAction", UserAction.Reads);
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "Author", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
+  }  
 
+  [Test]
+  public void CheckPredict5() {
+    // Predict on Author
+    // same as above but with the opposite values on the conditions
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Thread", Thread.New).Add("Length", Length.Short).Add("WhereRead", WhereRead.Home)
+      .Add("UserAction", UserAction.Skips);
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "Author", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
+  }  
+
+  [Test]
+  public void CheckPredict6() {
+    // Predict on Author
+    // same as above two but with not all conditions
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Thread", Thread.New).Add("Length", Length.Short);
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "Author", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
+  }  
+
+  [Test]
+  public void CheckPredict7() {
+    // Predict on UserAction
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.Followup)
+      .Add("Length", Length.Short);
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "UserAction", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
+  } 
+  
+  [Test]
+  public void CheckPredict8() {
+    // Predict on UserAction
+    // similar to above, but should give opposite UserAction value
+    //    this can be seen in the data
+    ReadArticleChoiceData data = new ReadArticleChoiceData();
+    Example conds = new Example();
+    conds.Add("Author", Author.Known).Add("Thread", Thread.Followup)
+      .Add("Length", Length.Long);
+    DecisionTree d = new DecisionTree();
+    d.SetConditionTree(conds, "UserAction", data.TrainingSet, 0);
+    Console.WriteLine(d);
+    Console.WriteLine(d.Predict(conds));
+  } 
 }
 
 // dotnet test -warnAsMessage:NUnit2005 Test --filter "DecisionTreeTests.CheckSelectSplit1"

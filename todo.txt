@@ -38,6 +38,10 @@ Each example has its own list of types for the Enums it contains in its
 There are some static functions in DecisionTree like find_mode(), sum_loss()
   that maybe should be moved to its own statistics/data science class
 Add better sum_loss calculations
+Make a version for a regression tree, when the target feature is 
+  real valued
+Allow for more complex conditions other than when the categorical 
+  target values are equal (inside the internal, non leaf nodes)
 
 Example of T(e) Tree function
 

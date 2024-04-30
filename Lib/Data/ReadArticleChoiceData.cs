@@ -100,18 +100,18 @@ Unknown  Followup  Long   Work      Skips
 Unknown  Followup  Short  Work      Skips
 Unknown  Followup  Short  Home      Skips
 Known    New       Long   Home      Skips
+Known    New       Long   Work      Skips
+Known    New       Long   Work      Skips
+Known    New       Short  Home      Reads
+Known    New       Short  Home      Reads
+Known    New       Short  Home      Reads
+Known    New       Short  Work      Reads
 Known    Followup  Long   Home      Skips
 Known    Followup  Long   Work      Skips
 Known    Followup  Long   Home      Skips
-Known    New       Long   Work      Skips
-Known    New       Long   Work      Skips
-Unknown  New       Short  Work      Reads
-Known    New       Short  Home      Reads
-Unknown  New       Short  Work      Reads
 Known    Followup  Short  Home      Reads
-Known    New       Short  Work      Reads
-Known    New       Short  Home      Reads
 Known    Followup  Short  Work      Reads
-Known    New       Short  Home      Reads
+Unknown  New       Short  Work      Reads
+Unknown  New       Short  Work      Reads
 Unknown  New       Short  Work      Reads
 */
