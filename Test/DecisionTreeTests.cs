@@ -370,4 +370,4 @@ public class DecisionTreeTests {
   } 
 }
 
-// dotnet test -warnAsMessage:NUnit2005 Test --filter "DecisionTreeTests.CheckSelectSplit1"
+// dotnet test Test --filter "DecisionTreeTests.CheckSelectSplit1"
