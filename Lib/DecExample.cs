@@ -3,14 +3,19 @@ namespace Lib;
 using System.Numerics;
 
 public class DecExample {
-  public Vector<double> Features {get;}
+  public List<double> Features {get;}
 
 
   public DecExample (double[] arr) {
-    Features = new Vector<double>(arr);
+    Features = new List<double>(arr);
   }
 
   public override string ToString() {
-    return Features.ToString();
+    string msg = "(";
+    foreach (double val in Features) {
+      msg += $"{val}, ";
+    }
+    msg = msg.TrimEnd(' ').TrimEnd(',');
+    return msg + ')';
   }
 }
