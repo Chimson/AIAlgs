@@ -18,4 +18,9 @@ public class DecExample {
     msg = msg.TrimEnd(' ').TrimEnd(',');
     return msg + ')';
   }
+
+  public double Val(int i) {
+    return Features[i];
+  }
+
 }

@@ -17,6 +17,13 @@ public class KMeansTests {
     Console.WriteLine(kmd);
   }
 
+  [Test]
+  public void CheckRandomInit() {
+    KMeansData kmd = new KMeansData();
+    KMeans.Predict(kmd.TrainingSet, 2);
+  }
+
+
 }
 
-// dotnet test Test --filter "KMeansTests.CheckDecExample"
+// dotnet test Test --filter "KMeansTests.CheckRandomInit()"

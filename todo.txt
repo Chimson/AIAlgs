@@ -120,3 +120,4 @@ null    null
 KMEANS
 * I have vectors for each floating point, and then a list to hold the 
   entire data set, should this be changed?
+* Change DecExample from a list of examples to an array of examples
